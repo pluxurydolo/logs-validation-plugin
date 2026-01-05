@@ -1,0 +1,87 @@
+import static org.jreleaser.model.Active.ALWAYS
+
+plugins {
+    id 'groovy-gradle-plugin'
+    id 'maven-publish'
+    id 'org.jreleaser' version '1.20.0'
+}
+
+group = 'io.github.pluxurydolo'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+gradlePlugin {
+    plugins {
+        logValidatorPlugin {
+            id = 'io.github.pluxurydolo.logs-validation-plugin'
+            implementationClass = 'com.pluxurydolo.ValidateLogsPlugin'
+        }
+    }
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            from components.java
+            pom {
+                name = 'logs-validation-plugin'
+                description = 'Logs Validation Plugin made for personal use'
+                url = 'https://upload.wikimedia.org/wikipedia/en/c/ce/Randallkennedybook.jpg'
+                developers {
+                    developer {
+                        id = 'pluxurydolo'
+                        name = 'Alexander'
+                    }
+                }
+                scm {
+                    url = 'scm:git:git://github.com/logs-validation-plugin.git'
+                    connection = 'scm:git:git://github.com/logs-validation-plugin.git'
+                    tag = '1.0.0'
+                }
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = uri layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    release {
+        github {
+            skipRelease.set true
+            skipTag.set true
+        }
+    }
+    signing {
+        active.set ALWAYS
+        armored.set true
+        verify.set true
+    }
+    project {
+        inceptionYear.set '2026'
+        author('@pluxurydolo')
+    }
+    deploy {
+        maven {
+            mavenCentral.create('sonatype') {
+                active.set ALWAYS
+                url = 'https://central.sonatype.com/api/v1/publisher'
+                stagingRepository layout.buildDirectory.dir('staging-deploy').get().toString()
+                setAuthorization 'Basic'
+                retryDelay.set 60
+            }
+        }
+    }
+}
