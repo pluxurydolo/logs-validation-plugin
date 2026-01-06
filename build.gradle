@@ -3,11 +3,11 @@ import static org.jreleaser.model.Active.ALWAYS
 plugins {
     id 'groovy-gradle-plugin'
     id 'maven-publish'
-    id 'org.jreleaser' version '1.20.0'
+    id 'org.jreleaser' version "$jreleaserVersion"
 }
 
 group = 'io.github.pluxurydolo'
-version = '2.0.0'
+version = '2.1.0'
 
 repositories {
     mavenCentral()
@@ -52,7 +52,7 @@ publishing {
                 scm {
                     url = 'scm:git:git://github.com/logs-validation-plugin.git'
                     connection = 'scm:git:git://github.com/logs-validation-plugin.git'
-                    tag = '2.0.0'
+                    tag = '2.1.0'
                 }
                 licenses {
                     license {
@@ -85,7 +85,7 @@ publishing {
             scm {
                 url = 'scm:git:git://github.com/logs-validation-plugin.git'
                 connection = 'scm:git:git://github.com/logs-validation-plugin.git'
-                tag = '2.0.0'
+                tag = '2.1.0'
             }
             licenses {
                 license {
