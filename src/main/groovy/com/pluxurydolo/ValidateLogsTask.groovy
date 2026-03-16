@@ -3,18 +3,19 @@ package com.pluxurydolo
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.ConfigurableFileTree
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.*
 
 import java.util.function.Function
 
 import static java.util.stream.Collectors.counting
 import static java.util.stream.Collectors.groupingBy
+import static org.gradle.api.tasks.PathSensitivity.RELATIVE
 
+@CacheableTask
 class ValidateLogsTask extends DefaultTask {
 
     @InputFiles
+    @PathSensitive(value = RELATIVE)
     ConfigurableFileTree files
 
     @Input
