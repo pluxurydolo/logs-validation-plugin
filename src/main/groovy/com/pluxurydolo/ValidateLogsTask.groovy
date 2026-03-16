@@ -7,7 +7,8 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.TaskAction
 
-import static java.util.function.Function.identity
+import java.util.function.Function
+
 import static java.util.stream.Collectors.counting
 import static java.util.stream.Collectors.groupingBy
 
@@ -74,7 +75,7 @@ class ValidateLogsTask extends DefaultTask {
 
     static List<String> getRepeatedPrefixes(List<String> prefixes) {
         return prefixes.stream()
-                .collect(groupingBy(identity(), counting()))
+                .collect(groupingBy(Function.identity(), counting()))
                 .entrySet()
                 .stream()
                 .filter { it.getValue() != 1 }
