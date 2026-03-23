@@ -1,4 +1,4 @@
-mvn clean install -U
+./gradlew clean build
 
 ./gradlew jreleaserConfig build publish
 ./gradlew jreleaserFullRelease
