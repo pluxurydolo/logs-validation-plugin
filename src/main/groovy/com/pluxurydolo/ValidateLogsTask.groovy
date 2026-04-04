@@ -26,7 +26,7 @@ class ValidateLogsTask extends DefaultTask {
         List<String> logs = collectLogs()
 
         if (logs.isEmpty()) {
-            throw new GradleException('Logs were not found! Check parameter "loggerName" of :validateLogs')
+            throw new GradleException('[logs-validation-plugin] Логи не найдены! Проверь параметр "loggerName" задачи :validateLogs')
         }
 
         List<String> prefixes = collectPrefixes(logs)
@@ -34,13 +34,13 @@ class ValidateLogsTask extends DefaultTask {
         List<String> prefixesWithInvalidLength = getPrefixesWithInvalidLength(prefixes)
 
         if (prefixesWithInvalidLength.size() != 0) {
-            throw new GradleException("Prefixes $prefixesWithInvalidLength have invalid length!")
+            throw new GradleException("[logs-validation-plugin] У префиксов $prefixesWithInvalidLength неверная длина!")
         }
 
         List<String> repeatedPrefixes = getRepeatedPrefixes(prefixes)
 
         if (repeatedPrefixes.size() != 0) {
-            throw new GradleException("Prefixes $repeatedPrefixes are not unique!")
+            throw new GradleException("[logs-validation-plugin] Префиксы $repeatedPrefixes не уникальны!")
         }
     }
 
@@ -54,7 +54,7 @@ class ValidateLogsTask extends DefaultTask {
                 .filter { it.startsWith('"') }
                 .toList()
 
-        logger.lifecycle("wpfe Collected logs: $logs")
+        logger.lifecycle("wpfe [logs-validation-plugin] Полученные логи: $logs")
         return logs
     }
 
@@ -64,7 +64,7 @@ class ValidateLogsTask extends DefaultTask {
                 .map { it.split(' ')[0] }
                 .toList()
 
-        logger.lifecycle("atbz Collected prefixes: $prefixes")
+        logger.lifecycle("atbz [logs-validation-plugin] Полученные префиксы: $prefixes")
         return prefixes
     }
 
