@@ -30,11 +30,11 @@ class ValidateLogsTask extends DefaultTask {
                 .forEach { it.validate(logs) }
     }
 
-    private static List<LogValidator> validators(String projectName) {
+    private List<LogValidator> validators(String projectName) {
         List<LogValidator> validators = new ArrayList<>(requiredValidators())
 
         if (projectName.endsWith('-starter')) {
-            LogValidator starterLogsValidator = new StarterLogsValidator()
+            LogValidator starterLogsValidator = new StarterLogsValidator(projectName, logger)
             validators.add(starterLogsValidator)
         }
 
