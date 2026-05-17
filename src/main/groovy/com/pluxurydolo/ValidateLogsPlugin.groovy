@@ -15,7 +15,8 @@ class ValidateLogsPlugin implements Plugin<Project> {
             tree.include '**/*.java'
 
             it.files = tree
-            it.loggerName = 'LOGGER'
+            it.loggerNames = ['LOGGER', 'log']
+            it.projectName = project.name
         }
     }
 }

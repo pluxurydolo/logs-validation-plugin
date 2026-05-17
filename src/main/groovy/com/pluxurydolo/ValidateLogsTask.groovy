@@ -1,14 +1,12 @@
 package com.pluxurydolo
 
+import com.pluxurydolo.dto.LogEntry
+import com.pluxurydolo.validator.*
 import org.gradle.api.DefaultTask
-import org.gradle.api.GradleException
 import org.gradle.api.file.ConfigurableFileTree
 import org.gradle.api.tasks.*
 
-import java.util.function.Function
-
-import static java.util.stream.Collectors.counting
-import static java.util.stream.Collectors.groupingBy
+import static com.pluxurydolo.util.LogCollector.collectLogs
 import static org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 @CacheableTask
@@ -19,68 +17,35 @@ class ValidateLogsTask extends DefaultTask {
     ConfigurableFileTree files
 
     @Input
-    String loggerName
+    List<String> loggerNames
+
+    @Input
+    String projectName
 
     @TaskAction
     void validateLogs() {
-        List<String> logs = collectLogs()
+        List<LogEntry> logs = collectLogs(files, loggerNames, logger)
 
-        if (logs.isEmpty()) {
-            throw new GradleException('[logs-validation-plugin] Логи не найдены! Проверь параметр "loggerName" задачи :validateLogs')
+        validators(projectName)
+                .forEach { it.validate(logs) }
+    }
+
+    private static List<LogValidator> validators(String projectName) {
+        List<LogValidator> validators = new ArrayList<>(requiredValidators())
+
+        if (projectName.endsWith('-starter')) {
+            LogValidator starterLogsValidator = new StarterLogsValidator()
+            validators.add(starterLogsValidator)
         }
 
-        List<String> prefixes = collectPrefixes(logs)
-
-        List<String> prefixesWithInvalidLength = getPrefixesWithInvalidLength(prefixes)
-
-        if (prefixesWithInvalidLength.size() != 0) {
-            throw new GradleException("[logs-validation-plugin] У префиксов $prefixesWithInvalidLength неверная длина!")
-        }
-
-        List<String> repeatedPrefixes = getRepeatedPrefixes(prefixes)
-
-        if (repeatedPrefixes.size() != 0) {
-            throw new GradleException("[logs-validation-plugin] Префиксы $repeatedPrefixes не уникальны!")
-        }
+        return validators
     }
 
-    List<String> collectLogs() {
-        List<String> logs = files.collect { it.text }
-                .stream()
-                .flatMap { Arrays.stream(it.split('\n')) }
-                .map { it.trim() }
-                .filter { it.contains("$loggerName.") }
-                .flatMap { Arrays.stream(it.split('\\(')) }
-                .filter { it.startsWith('"') }
-                .toList()
-
-        logger.lifecycle("wpfe [logs-validation-plugin] Полученные логи: $logs")
-        return logs
-    }
-
-    List<String> collectPrefixes(List<String> logs) {
-        List<String> prefixes = logs.stream()
-                .map { it.replace('"', '') }
-                .map { it.split(' ')[0] }
-                .toList()
-
-        logger.lifecycle("atbz [logs-validation-plugin] Полученные префиксы: $prefixes")
-        return prefixes
-    }
-
-    static List<String> getPrefixesWithInvalidLength(List<String> prefixes) {
-        return prefixes.stream()
-                .filter { it.length() != 4 }
-                .toList()
-    }
-
-    static List<String> getRepeatedPrefixes(List<String> prefixes) {
-        return prefixes.stream()
-                .collect(groupingBy(Function.identity(), counting()))
-                .entrySet()
-                .stream()
-                .filter { it.getValue() != 1 }
-                .map { it.getKey() }
-                .toList()
+    private static List<LogValidator> requiredValidators() {
+        LogValidator prefixLengthValidator = new PrefixLengthValidator()
+        LogValidator prefixCaseValidator = new PrefixCaseValidator()
+        LogValidator prefixDigitsValidator = new PrefixDigitsValidator()
+        LogValidator repeatedPrefixesValidator = new RepeatedPrefixesValidator()
+        return List.of(prefixLengthValidator, prefixCaseValidator, prefixDigitsValidator, repeatedPrefixesValidator)
     }
 }
