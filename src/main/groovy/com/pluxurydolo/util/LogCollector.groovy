@@ -33,7 +33,7 @@ class LogCollector {
     }
 
     private static boolean isLogLine(List<String> loggerNames, String line) {
-        return loggerNames.any { loggerName -> line.contains(loggerName) }
+        return loggerNames.any { loggerName -> line.contains("$loggerName.") }
     }
 
     private static List<LogEntry> extractLogEntries(String line, File file, int lineIndex, String normalizedPath) {
