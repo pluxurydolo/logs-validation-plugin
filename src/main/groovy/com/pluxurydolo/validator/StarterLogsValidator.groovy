@@ -1,17 +1,14 @@
 package com.pluxurydolo.validator
 
 import com.pluxurydolo.dto.LogEntry
-import org.gradle.api.logging.Logger
 
 import static com.pluxurydolo.util.PrefixCollector.collectPrefixes
 
 class StarterLogsValidator extends LogValidator {
-    private final String projectName
-    private final Logger logger
+    private final String starterQualifier
 
-    StarterLogsValidator(String projectName, Logger logger) {
-        this.projectName = projectName
-        this.logger = logger
+    StarterLogsValidator(String starterQualifier) {
+        this.starterQualifier = starterQualifier
     }
 
     @Override
@@ -28,23 +25,11 @@ class StarterLogsValidator extends LogValidator {
     private boolean logInvalid(String logContent) {
         String content = logContent.replace('"', '')
         String afterPrefix = content.substring(4).trim()
-        String starterQualifer = starterQualifier()
 
-        if (!afterPrefix.startsWith("[$starterQualifer]")) {
+        if (!afterPrefix.startsWith("[$starterQualifier]")) {
             return true
         }
 
         return false
-    }
-
-    private String starterQualifier() {
-        String[] qualifierParts = projectName.split('-')
-        String firstPart = qualifierParts[0]
-        String lastPart = qualifierParts[qualifierParts.size() - 1]
-        String starterQualifier = "$firstPart-$lastPart"
-
-        logger.lifecycle("lugw [logs-plugin] Название стартера: $starterQualifier")
-
-        return starterQualifier
     }
 }

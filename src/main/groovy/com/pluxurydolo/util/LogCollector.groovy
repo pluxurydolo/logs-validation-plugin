@@ -9,8 +9,13 @@ import java.util.stream.IntStream
 
 class LogCollector {
     static List<LogEntry> collectLogs(ConfigurableFileTree files, List<String> loggerNames, Logger logger) {
-        List<LogEntry> logs = files.collectMany { file -> collectFromFile(file, loggerNames) }
-        logger.lifecycle("wpfe [logs-plugin] Полученные логи: ${logs.content}")
+        List<LogEntry> logs = files.collectMany { collectFromFile(it, loggerNames) }
+
+        List<String> logsContent = logs.stream()
+                .map { it.content }
+                .toList()
+
+        logger.lifecycle("wpfe [logs-plugin] Полученные логи: $logsContent")
         return logs
     }
 
@@ -28,12 +33,12 @@ class LogCollector {
         String[] lines = file.text.split('\n')
 
         return IntStream.range(0, lines.size())
-                .mapToObj { index -> new IndexedLine(lines[index], index) }
+                .mapToObj { new IndexedLine(lines[it], it) }
                 .toList()
     }
 
     private static boolean isLogLine(List<String> loggerNames, String line) {
-        return loggerNames.any { loggerName -> line.contains("$loggerName.") }
+        return loggerNames.any { line.contains("$it.") }
     }
 
     private static List<LogEntry> extractLogEntries(String line, File file, int lineIndex, String normalizedPath) {
@@ -42,6 +47,9 @@ class LogCollector {
 
         return line.split('\\(')
                 .findAll { it.startsWith('"') }
-                .collect { logContent -> new LogEntry(logContent, file, lineNumber, location) }
+                .stream()
+                .map { it.split('"')[1] }
+                .map { new LogEntry(it, file, lineNumber, location) }
+                .toList()
     }
 }

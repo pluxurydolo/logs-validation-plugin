@@ -1,6 +1,7 @@
 package com.pluxurydolo
 
 import com.pluxurydolo.dto.LogEntry
+import com.pluxurydolo.util.StarterQualifierRetriever
 import com.pluxurydolo.validator.*
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileTree
@@ -26,19 +27,15 @@ class ValidateLogsTask extends DefaultTask {
     void validateLogs() {
         List<LogEntry> logs = collectLogs(files, loggerNames, logger)
 
-        validators(projectName)
-                .forEach { it.validate(logs) }
-    }
-
-    private List<LogValidator> validators(String projectName) {
         List<LogValidator> validators = new ArrayList<>(requiredValidators())
 
         if (projectName.endsWith('-starter')) {
-            LogValidator starterLogsValidator = new StarterLogsValidator(projectName, logger)
+            String starterQualifier = StarterQualifierRetriever.retrieve(projectName, logger)
+            LogValidator starterLogsValidator = new StarterLogsValidator(starterQualifier)
             validators.add(starterLogsValidator)
         }
 
-        return validators
+        validators.forEach { it.validate(logs) }
     }
 
     private static List<LogValidator> requiredValidators() {
