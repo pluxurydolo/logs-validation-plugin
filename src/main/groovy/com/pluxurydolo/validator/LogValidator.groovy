@@ -14,13 +14,12 @@ abstract class LogValidator {
 
         if (invalidLogs.size() != 0) {
             String errorMessageDescription = errorMessageDescription(invalidLogs)
-            String advisedPrefix = generate()
 
             StringBuilder errorMessage = new StringBuilder(errorMessageDescription)
                     .append('\n')
-                    .append("Предложенный префикс: $advisedPrefix\n")
 
-            invalidLogs.each { errorMessage.append("  ${it.location}\n") }
+            invalidLogs.each { enrichErrorMessage(errorMessage, it) }
+
             logger.error(errorMessage.toString())
 
             return FAILURE
@@ -33,6 +32,13 @@ abstract class LogValidator {
         return logEntry.content
                 .replace('"', '')
                 .split(' ')[0]
+    }
+
+    protected static void enrichErrorMessage(StringBuilder errorMessage, LogEntry logEntry) {
+        String advisedPrefix = generate()
+
+        errorMessage.append("Предложенный префикс: $advisedPrefix\n")
+                .append("  ${logEntry.location}\n")
     }
 
     abstract List<LogEntry> retrieveInvalidLogs(List<LogEntry> logs)
