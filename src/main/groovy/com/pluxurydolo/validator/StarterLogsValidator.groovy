@@ -24,9 +24,8 @@ class StarterLogsValidator extends LogValidator {
 
     private boolean logInvalid(String logContent) {
         String content = logContent.replace('"', '')
-        String afterPrefix = content.substring(4).trim()
 
-        if (!afterPrefix.startsWith("[$starterQualifier]")) {
+        if (!content.contains("[$starterQualifier]")) {
             return true
         }
 
