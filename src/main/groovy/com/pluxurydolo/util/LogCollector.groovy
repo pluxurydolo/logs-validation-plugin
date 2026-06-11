@@ -2,13 +2,13 @@ package com.pluxurydolo.util
 
 import com.pluxurydolo.dto.IndexedLine
 import com.pluxurydolo.dto.LogEntry
-import org.gradle.api.file.ConfigurableFileTree
+import org.gradle.api.file.FileTree
 import org.gradle.api.logging.Logger
 
 import java.util.stream.IntStream
 
 class LogCollector {
-    static List<LogEntry> collectLogs(ConfigurableFileTree files, List<String> loggerNames, Logger logger) {
+    static List<LogEntry> collectLogs(FileTree files, List<String> loggerNames, Logger logger) {
         List<LogEntry> logs = files.collectMany { collectFromFile(it, loggerNames) }
 
         List<String> logsContent = logs.stream()

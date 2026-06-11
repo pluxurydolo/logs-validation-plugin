@@ -14,17 +14,17 @@ class ValidationInitializer {
         List<LogValidator> validators = new ArrayList<>(requiredValidators())
 
         if (projectName.endsWith('-starter')) {
-            String starterQualifier = StarterQualifierRetriever.retrieve(projectName, logger)
+            String starterQualifier = StarterQualifierRetriever.retrieve(projectName)
             LogValidator starterLogsValidator = new StarterLogsValidator(starterQualifier)
             validators.add(starterLogsValidator)
         }
 
-        List<ValidationResult> failedValidators = validators.stream()
+        List<ValidationResult> failedResults = validators.stream()
                 .map { it.validate(logs, logger) }
                 .filter { it == FAILURE }
                 .toList()
 
-        if (!failedValidators.empty) {
+        if (!failedResults.empty) {
             throw new GradleException('Валидация логов завершилась неуспешно')
         }
     }
