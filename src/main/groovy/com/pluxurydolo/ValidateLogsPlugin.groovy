@@ -6,6 +6,9 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 
+import static com.pluxurydolo.util.ProjectUtils.isPlugin
+import static com.pluxurydolo.util.ProjectUtils.isStarter
+
 class ValidateLogsPlugin implements Plugin<Project> {
 
     @Override
@@ -26,7 +29,7 @@ class ValidateLogsPlugin implements Plugin<Project> {
         }
 
         project.afterEvaluate {
-            if (validationExtension.groups == null) {
+            if (validationExtension.groups == null && !isStarter(project) && !isPlugin(project)) {
                 project.logger.error('jyde [logs-plugin] Требуется указать зависимости для валидации логов в них: logsValidation { groups = [\'com.package\'] }')
                 throw new GradleException('Не указаны зависимости для валидации логов в них')
             }
