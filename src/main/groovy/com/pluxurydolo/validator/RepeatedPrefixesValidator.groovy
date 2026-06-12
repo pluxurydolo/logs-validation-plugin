@@ -4,7 +4,7 @@ import com.pluxurydolo.dto.LogEntry
 
 import java.util.function.Function
 
-import static com.pluxurydolo.util.PrefixCollector.collectPrefixes
+import static com.pluxurydolo.collector.PrefixCollector.collectPrefixes
 import static java.util.Collections.emptyList
 import static java.util.stream.Collectors.counting
 import static java.util.stream.Collectors.groupingBy

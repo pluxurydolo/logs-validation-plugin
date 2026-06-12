@@ -2,7 +2,7 @@ package com.pluxurydolo.validator
 
 import com.pluxurydolo.dto.LogEntry
 
-import static com.pluxurydolo.util.PrefixCollector.collectPrefixes
+import static com.pluxurydolo.collector.PrefixCollector.collectPrefixes
 
 class StarterLogsValidator extends LogValidator {
     private final String starterQualifier

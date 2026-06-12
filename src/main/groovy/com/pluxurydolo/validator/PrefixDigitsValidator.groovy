@@ -1,7 +1,7 @@
 package com.pluxurydolo.validator
 
 import com.pluxurydolo.dto.LogEntry
-import com.pluxurydolo.util.PrefixCollector
+import com.pluxurydolo.collector.PrefixCollector
 
 import static java.lang.Character.isDigit
 

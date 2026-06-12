@@ -1,4 +1,4 @@
-package com.pluxurydolo.util
+package com.pluxurydolo.retriever
 
 import static java.util.Arrays.stream
 import static java.util.stream.Collectors.joining

@@ -1,4 +1,4 @@
-package com.pluxurydolo.util
+package com.pluxurydolo.generator
 
 import java.security.SecureRandom
 

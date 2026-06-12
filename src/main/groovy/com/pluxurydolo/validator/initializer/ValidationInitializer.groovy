@@ -2,7 +2,7 @@ package com.pluxurydolo.validator.initializer
 
 import com.pluxurydolo.dto.LogEntry
 import com.pluxurydolo.dto.ValidationResult
-import com.pluxurydolo.util.StarterQualifierRetriever
+import com.pluxurydolo.retriever.StarterQualifierRetriever
 import com.pluxurydolo.validator.*
 import org.gradle.api.GradleException
 import org.gradle.api.logging.Logger

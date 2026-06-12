@@ -6,7 +6,7 @@ import org.gradle.api.logging.Logger
 
 import static com.pluxurydolo.dto.ValidationResult.FAILURE
 import static com.pluxurydolo.dto.ValidationResult.SUCCESS
-import static com.pluxurydolo.util.PrefixGenerator.generate
+import static com.pluxurydolo.generator.PrefixGenerator.generate
 
 abstract class LogValidator {
     ValidationResult validate(List<LogEntry> logs, Logger logger) {
